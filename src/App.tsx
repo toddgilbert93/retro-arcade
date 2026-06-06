@@ -14,6 +14,11 @@ import {
 import { ThemePicker } from './components/ThemePicker'
 import { useChessGame } from './hooks/useChessGame'
 import { usePokemonBattle } from './hooks/usePokemonBattle'
+import {
+  gameLayoutGrid,
+  gameLayoutPrimary,
+  gameLayoutSidebar,
+} from '@/layout/gameLayout'
 type Page = 'game' | 'battler'
 
 export default function App() {
@@ -33,7 +38,7 @@ export default function App() {
     <Tabs
       value={page}
       onValueChange={handlePageChange}
-      className="mx-auto max-w-5xl px-6 pb-4 pt-10"
+      className="mx-auto max-w-5xl px-6 pb-8 pt-10"
     >
       <header className="mb-4 shrink-0">
         <div className="flex items-start justify-between gap-4">
@@ -54,8 +59,8 @@ export default function App() {
 
       <TabsContent value="game" className="mt-0">
         {snapshot && (
-          <main className="grid items-start gap-6 lg:grid-cols-[minmax(320px,520px)_1fr]">
-            <div className="flex w-full flex-col gap-4">
+          <main className={gameLayoutGrid}>
+            <div className={gameLayoutPrimary}>
               <Board
                 fen={snapshot.fen}
                 lastMove={snapshot.lastMove}
@@ -64,7 +69,7 @@ export default function App() {
               <MoveList history={snapshot.history} />
             </div>
 
-            <aside className="flex flex-col gap-4">
+            <aside className={gameLayoutSidebar}>
               <GameControls
                 snapshot={snapshot}
                 whiteId={game.whiteId}

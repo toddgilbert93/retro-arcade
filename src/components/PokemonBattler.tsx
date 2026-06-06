@@ -5,30 +5,23 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/8bit/card'
-import { Button } from '@/components/ui/8bit/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/8bit/select'
 import { DEFAULT_MODEL_A_ID, DEFAULT_MODEL_B_ID, MODELS } from '@battler/agent/models.ts'
 import { TEAM_SIZE } from '@battler/agent/draft.ts'
 import type { usePokemonBattle } from '@/hooks/usePokemonBattle'
 import { frontSprite } from '@/pokemon/sprites'
 import type { PlayerSide, TeamMemberView } from '@/pokemon/types'
-import { playerFrameColor, playerTextClass } from '@/pokemon/playerColors'
+import { playerTextClass } from '@/pokemon/playerColors'
 import { ActivityFeed } from '@/components/pokemon/ActivityFeed'
 import { BattleCardShader } from '@/components/pokemon/BattleCardShader'
 import { PokemonPanel } from '@/components/pokemon/battleParts'
+import { BattleControls } from '@/components/BattleControls'
+import {
+  gameLayoutGrid,
+  gameLayoutPrimary,
+  gameLayoutSidebar,
+  pokemonBattleCardH,
+} from '@/layout/gameLayout'
 import { cn } from '@/lib/utils'
-
-/** Shared fixed heights for battler panels. */
-const MAIN_CARD_H = '!h-80' // battle + activity
-const TEAM_CARD_H = '!h-52' // team roster cards
-const flexCard = () => cn('!flex min-h-0 flex-col')
-const fixedCard = (height: string) => cn(flexCard(), height)
 
 type PokemonBattlerProps = {
   battle: ReturnType<typeof usePokemonBattle>
@@ -70,71 +63,10 @@ export function PokemonBattler({ battle }: PokemonBattlerProps) {
   const picksB = draftPicks.filter((p) => p.side === 1)
 
   return (
-    <div className="flex w-full flex-col gap-6">
-      <div className="bit-button-group flex w-full shrink-0 flex-wrap items-center gap-x-4 gap-y-3">
-        <div className="bit-button-slot min-w-[8rem] flex-1">
-          <Select value={aId} onValueChange={setAId} disabled={selectorsLocked}>
-            <SelectTrigger id="player-a" frameColor={playerFrameColor(0)} className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {MODELS.map((m) => (
-                <SelectItem key={m.id} value={m.id} textColor={playerFrameColor(0)}>
-                  {m.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="bit-button-slot flex w-10 shrink-0 items-center justify-center">
-          <span className="retro text-[10px] text-muted-foreground">vs.</span>
-        </div>
-        <div className="bit-button-slot min-w-[8rem] flex-1">
-          <Select value={bId} onValueChange={setBId} disabled={selectorsLocked}>
-            <SelectTrigger id="player-b" frameColor={playerFrameColor(1)} className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {MODELS.map((m) => (
-                <SelectItem key={m.id} value={m.id} textColor={playerFrameColor(1)}>
-                  {m.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="bit-button-slot shrink-0">
-          {showPause ? (
-            <Button
-              onClick={pause}
-              disabled={pausePending || terminal}
-              variant={pausePending ? 'secondary' : 'default'}
-              className="px-4"
-              aria-pressed={pausePending}
-            >
-              Pause
-            </Button>
-          ) : (
-            <Button
-              onClick={onPlay}
-              disabled={terminal || (thinking !== null && !paused)}
-              className="px-4"
-            >
-              {paused ? 'Resume' : 'Battle!'}
-            </Button>
-          )}
-        </div>
-        <div className="bit-button-slot shrink-0">
-          <Button onClick={reset} variant="secondary" className="px-4">
-            Reset
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid w-full shrink-0 grid-cols-1 items-start gap-6 lg:grid-cols-2">
-        <Card
-          className={cn(fixedCard(MAIN_CARD_H), 'relative min-w-0 !py-0')}
-        >
+    <main className={cn(gameLayoutGrid, 'lg:items-stretch')}>
+      <div className={cn(gameLayoutPrimary, 'lg:h-full')}>
+        <div className={cn('shrink-0', pokemonBattleCardH)}>
+        <Card className="relative h-full min-w-0 !py-0">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
@@ -183,23 +115,38 @@ export function PokemonBattler({ battle }: PokemonBattlerProps) {
             )}
           </CardContent>
         </Card>
+        </div>
 
-        <Card className={cn(fixedCard(MAIN_CARD_H), 'min-w-0 !py-0')}>
-          <CardHeader className="shrink-0 py-3">
+        <Card className="flex min-h-0 min-w-0 flex-1 flex-col !gap-0 !py-0">
+          <CardHeader className="shrink-0 pt-5 pb-2">
             <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">
               Activity
             </CardTitle>
           </CardHeader>
-          <CardContent className="retro flex min-h-0 flex-1 flex-col overflow-hidden pt-0">
+          <CardContent className="retro flex min-h-0 flex-1 flex-col overflow-hidden pt-3 pb-4">
             <ActivityFeed log={log} />
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid w-full shrink-0 grid-cols-1 items-start gap-6 lg:grid-cols-2">
+      <aside className={gameLayoutSidebar}>
+        <BattleControls
+          aId={aId}
+          bId={bId}
+          selectorsLocked={selectorsLocked}
+          showPause={showPause}
+          pausePending={pausePending}
+          terminal={terminal}
+          thinking={thinking !== null}
+          paused={paused}
+          onAIdChange={setAId}
+          onBIdChange={setBId}
+          onPlay={onPlay}
+          onPause={pause}
+          onReset={reset}
+        />
         <DraftColumn
           side={0}
-          className={fixedCard(TEAM_CARD_H)}
           title={modelA.label}
           picks={picksA}
           team={snapshot?.sideA.team}
@@ -209,7 +156,6 @@ export function PokemonBattler({ battle }: PokemonBattlerProps) {
         />
         <DraftColumn
           side={1}
-          className={fixedCard(TEAM_CARD_H)}
           title={modelB.label}
           picks={picksB}
           team={snapshot?.sideB.team}
@@ -217,8 +163,8 @@ export function PokemonBattler({ battle }: PokemonBattlerProps) {
           thinking={thinking}
           pausePending={pausePending}
         />
-      </div>
-    </div>
+      </aside>
+    </main>
   )
 }
 
@@ -228,7 +174,6 @@ function DraftColumn({
   team,
   activeDexNumber,
   side,
-  className,
   thinking,
   pausePending,
 }: {
@@ -237,14 +182,13 @@ function DraftColumn({
   team?: TeamMemberView[]
   activeDexNumber?: number
   side: PlayerSide
-  className?: string
   thinking: string | null
   pausePending: boolean
 }) {
   const isThinking = thinking === title && !pausePending
 
   return (
-    <Card className={cn('min-w-0 flex-1', className)}>
+    <Card>
       <CardHeader className="shrink-0 py-3">
         <div className="flex items-center justify-between gap-2">
           <CardTitle
@@ -271,7 +215,7 @@ function DraftColumn({
           </span>
         </div>
       </CardHeader>
-      <CardContent className="min-h-0 flex-1 overflow-y-auto pt-0">
+      <CardContent className="pt-0">
         <div className="flex w-full items-end gap-1">
           {Array.from({ length: TEAM_SIZE }, (_, i) => {
             const p = picks[i]
