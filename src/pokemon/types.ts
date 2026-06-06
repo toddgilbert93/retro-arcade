@@ -60,6 +60,14 @@ export interface BattleSnapshot {
   winner: 0 | 1 | null
 }
 
+/** Overlay animation played on the defender during move impact. */
+export interface MoveVfxState {
+  targetSide: PlayerSide
+  moveType: string
+  /** Changes each time a new impact VFX should start. */
+  token: number
+}
+
 export interface DraftPick {
   side: 0 | 1
   species: string
@@ -79,4 +87,6 @@ export interface RunnerState {
   autoplay: boolean
   /** True when pause was requested but the current model call is still in flight. */
   pausePending: boolean
+  /** Active move impact overlay, if any. */
+  moveVfx: MoveVfxState | null
 }

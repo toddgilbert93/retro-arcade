@@ -13,6 +13,7 @@ const initialState: RunnerState = {
   error: null,
   autoplay: false,
   pausePending: false,
+  moveVfx: null,
 }
 
 export function usePokemonBattle() {

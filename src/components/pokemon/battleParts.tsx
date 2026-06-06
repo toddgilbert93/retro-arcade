@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { MiniProgress } from '@/components/ui/8bit/mini-progress'
 import { cn } from '@/lib/utils'
 import { PokeballSprite } from '@/components/pokemon/PokeballSprite'
+import { MoveVfxOverlay } from '@/components/pokemon/MoveVfxOverlay'
 import { POKEBALL_ANIM_MS, POKEBALL_SWAP_AT_MS } from '@/pokemon/pokeballAnim'
 import { backSprite, frontSprite } from '@/pokemon/sprites'
-import type { MonView } from '@/pokemon/types'
+import type { MonView, MoveVfxState, PlayerSide } from '@/pokemon/types'
 
 const TYPE_COLORS: Record<string, string> = {
   NORMAL: 'bg-stone-400 text-black',
@@ -76,11 +77,15 @@ export function PokemonPanel({
   nameClassName,
   facing,
   compact = false,
+  side,
+  moveVfx,
 }: {
   mon: MonView
   nameClassName?: string
   facing: 'front' | 'back'
   compact?: boolean
+  side: PlayerSide
+  moveVfx?: MoveVfxState | null
 }) {
   const align = facing === 'front' ? 'right' : 'left'
   const prevHp = useRef<number | null>(null)
@@ -197,6 +202,7 @@ export function PokemonPanel({
           <PokeballSprite key={mon.dexNumber} />
         </div>
       )}
+      <MoveVfxOverlay moveVfx={moveVfx ?? null} side={side} compact={compact} />
     </div>
   )
 

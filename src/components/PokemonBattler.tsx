@@ -39,6 +39,7 @@ export function PokemonBattler() {
     thinking,
     autoplay,
     pausePending,
+    moveVfx,
     start,
     pause,
     resume,
@@ -145,6 +146,8 @@ export function PokemonBattler() {
                     mon={snapshot.sideB.active}
                     nameClassName={playerTextClass(1)}
                     facing="front"
+                    side={1}
+                    moveVfx={moveVfx}
                   />
                 </div>
                 <div className="flex shrink-0 justify-start">
@@ -152,12 +155,27 @@ export function PokemonBattler() {
                     mon={snapshot.sideA.active}
                     nameClassName={playerTextClass(0)}
                     facing="back"
+                    side={0}
+                    moveVfx={moveVfx}
                   />
                 </div>
               </>
             ) : (
               <div className="flex flex-1 items-center justify-center">
-                <p className="retro text-center text-sm text-muted-foreground">Battle not started.</p>
+                <p className="retro text-center text-sm text-muted-foreground">
+                  {phase === 'drafting' ? (
+                    <>
+                      Draft underway
+                      <span className="thinking-dots" aria-hidden="true">
+                        <span>.</span>
+                        <span>.</span>
+                        <span>.</span>
+                      </span>
+                    </>
+                  ) : (
+                    'Battle not started.'
+                  )}
+                </p>
               </div>
             )}
           </CardContent>

@@ -357,6 +357,23 @@
   }
 }
 
+@keyframes move-vfx-sheet {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 calc(-1 * var(--vfx-travel));
+  }
+}
+
+.move-vfx-sheet {
+  image-rendering: pixelated;
+  animation-name: move-vfx-sheet;
+  animation-timing-function: steps(var(--vfx-steps));
+  animation-fill-mode: none;
+  overflow: hidden;
+}
+
 .winner-ticker-track {
   animation: winner-ticker 12s linear infinite;
 }

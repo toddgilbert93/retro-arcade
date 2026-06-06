@@ -7,7 +7,6 @@ import {
   makeLLMReplacer,
   makeLLMDrafter,
 } from '@battler/agent/llmChooser.ts'
-import { describeAction } from '@battler/agent/serialize.ts'
 import { SNAKE_ORDER } from '@battler/agent/draft.ts'
 import { randomDraftPool } from '@battler/data/draftPool.ts'
 import { POKEMON_BY_ID } from '@battler/data/pokemon.ts'
@@ -24,6 +23,7 @@ import type {
   MoveView,
   RunnerState,
   SideView,
+  MoveVfxState,
 } from './types'
 import {
   BOTH_COMMITTED_MS,
@@ -54,6 +54,7 @@ const initialState: RunnerState = {
   error: null,
   autoplay: false,
   pausePending: false,
+  moveVfx: null,
 }
 
 /**
@@ -71,6 +72,7 @@ export class PokemonBattleRunner {
   private autoplay = false
   private runGeneration = 0
   private speedMs = 750
+  private vfxToken = 0
 
   subscribe(fn: Listener): () => void {
     this.listeners.add(fn)
@@ -265,7 +267,6 @@ export class PokemonBattleRunner {
       })
       if (this.aborted || generation !== this.runGeneration) return
       this.setThinking(null, generation)
-      this.appendLog(describeAction(battle, 0, actionA), generation, 0)
       this.emitSnapshot(battle, null, generation, { 0: actionA, 1: null })
       await this.ensureMinDuration(phaseStartA)
 
@@ -279,7 +280,6 @@ export class PokemonBattleRunner {
       })
       if (this.aborted || generation !== this.runGeneration) return
       this.setThinking(null, generation)
-      this.appendLog(describeAction(battle, 1, actionB), generation, 1)
       this.emitSnapshot(battle, null, generation, { 0: actionA, 1: actionB })
       await this.ensureMinDuration(phaseStartB)
 
@@ -379,6 +379,17 @@ export class PokemonBattleRunner {
       buffered.push({ text: line, side: inferLogSide(line, battle) })
     }
 
+    let moveType: string | null = null
+    let movePower = 0
+    if (action.type === 'move') {
+      const slot = battle.active(side).moves[action.moveIndex]
+      moveType = slot.move.type
+      movePower = slot.move.power
+    } else if (action.type === 'struggle') {
+      moveType = 'NORMAL'
+      movePower = 50
+    }
+
     battle.executeTurnMove(side, action)
     battle.onLog = prevOnLog
 
@@ -397,6 +408,17 @@ export class PokemonBattleRunner {
       if (batch.phase === 'impact') syncImpactField(field, battle)
       if (batch.phase === 'status') syncStatusField(field, battle)
 
+      const defender = (1 - side) as SideId
+      const moveVfx: MoveVfxState | null =
+        batch.phase === 'impact' && movePower > 0 && moveType
+          ? {
+              targetSide: defender,
+              moveType,
+              token: ++this.vfxToken,
+            }
+          : null
+      this.patch({ moveVfx }, generation)
+
       const showCaret = batch.phase === 'announce'
       this.emitSnapshot(
         battle,
@@ -410,6 +432,7 @@ export class PokemonBattleRunner {
       if (!(await this.waitForAutoplay(generation))) return false
     }
 
+    this.patch({ moveVfx: null }, generation)
     this.emitSnapshot(battle, null, generation, { 0: null, 1: null })
     return true
   }
