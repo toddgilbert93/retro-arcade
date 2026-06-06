@@ -15,11 +15,12 @@ import {
 } from '@/components/ui/8bit/select'
 import { DEFAULT_MODEL_A_ID, DEFAULT_MODEL_B_ID, MODELS } from '@battler/agent/models.ts'
 import { TEAM_SIZE } from '@battler/agent/draft.ts'
-import { usePokemonBattle } from '@/hooks/usePokemonBattle'
+import type { usePokemonBattle } from '@/hooks/usePokemonBattle'
 import { frontSprite } from '@/pokemon/sprites'
 import type { PlayerSide, TeamMemberView } from '@/pokemon/types'
 import { playerFrameColor, playerTextClass } from '@/pokemon/playerColors'
 import { ActivityFeed } from '@/components/pokemon/ActivityFeed'
+import { BattleCardShader } from '@/components/pokemon/BattleCardShader'
 import { PokemonPanel } from '@/components/pokemon/battleParts'
 import { cn } from '@/lib/utils'
 
@@ -29,8 +30,11 @@ const TEAM_CARD_H = '!h-52' // team roster cards
 const flexCard = () => cn('!flex min-h-0 flex-col')
 const fixedCard = (height: string) => cn(flexCard(), height)
 
-export function PokemonBattler() {
-  const battle = usePokemonBattle()
+type PokemonBattlerProps = {
+  battle: ReturnType<typeof usePokemonBattle>
+}
+
+export function PokemonBattler({ battle }: PokemonBattlerProps) {
   const {
     phase,
     snapshot,
@@ -66,79 +70,78 @@ export function PokemonBattler() {
   const picksB = draftPicks.filter((p) => p.side === 1)
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col gap-3">
-      <Card className="shrink-0">
-        <CardHeader className="shrink-0 py-3">
-          <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">
-            Controls
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <div className="bit-button-group flex w-full flex-wrap items-center gap-x-4 gap-y-3">
-            <div className="bit-button-slot min-w-[8rem] flex-1">
-              <Select value={aId} onValueChange={setAId} disabled={selectorsLocked}>
-                <SelectTrigger id="player-a" frameColor={playerFrameColor(0)} className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {MODELS.map((m) => (
-                    <SelectItem key={m.id} value={m.id}>
-                      {m.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="bit-button-slot flex w-10 shrink-0 items-center justify-center">
-              <span className="retro text-[10px] text-muted-foreground">vs.</span>
-            </div>
-            <div className="bit-button-slot min-w-[8rem] flex-1">
-              <Select value={bId} onValueChange={setBId} disabled={selectorsLocked}>
-                <SelectTrigger id="player-b" frameColor={playerFrameColor(1)} className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {MODELS.map((m) => (
-                    <SelectItem key={m.id} value={m.id}>
-                      {m.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="bit-button-slot shrink-0">
-              {showPause ? (
-                <Button
-                  onClick={pause}
-                  disabled={pausePending || terminal}
-                  variant={pausePending ? 'secondary' : 'default'}
-                  className="px-4"
-                  aria-pressed={pausePending}
-                >
-                  Pause
-                </Button>
-              ) : (
-                <Button
-                  onClick={onPlay}
-                  disabled={terminal || (thinking !== null && !paused)}
-                  className="px-4"
-                >
-                  {paused ? 'Resume' : 'Battle!'}
-                </Button>
-              )}
-            </div>
-            <div className="bit-button-slot shrink-0">
-              <Button onClick={reset} variant="secondary" className="px-4">
-                Reset
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="flex w-full flex-col gap-6">
+      <div className="bit-button-group flex w-full shrink-0 flex-wrap items-center gap-x-4 gap-y-3">
+        <div className="bit-button-slot min-w-[8rem] flex-1">
+          <Select value={aId} onValueChange={setAId} disabled={selectorsLocked}>
+            <SelectTrigger id="player-a" frameColor={playerFrameColor(0)} className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {MODELS.map((m) => (
+                <SelectItem key={m.id} value={m.id} textColor={playerFrameColor(0)}>
+                  {m.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="bit-button-slot flex w-10 shrink-0 items-center justify-center">
+          <span className="retro text-[10px] text-muted-foreground">vs.</span>
+        </div>
+        <div className="bit-button-slot min-w-[8rem] flex-1">
+          <Select value={bId} onValueChange={setBId} disabled={selectorsLocked}>
+            <SelectTrigger id="player-b" frameColor={playerFrameColor(1)} className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {MODELS.map((m) => (
+                <SelectItem key={m.id} value={m.id} textColor={playerFrameColor(1)}>
+                  {m.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="bit-button-slot shrink-0">
+          {showPause ? (
+            <Button
+              onClick={pause}
+              disabled={pausePending || terminal}
+              variant={pausePending ? 'secondary' : 'default'}
+              className="px-4"
+              aria-pressed={pausePending}
+            >
+              Pause
+            </Button>
+          ) : (
+            <Button
+              onClick={onPlay}
+              disabled={terminal || (thinking !== null && !paused)}
+              className="px-4"
+            >
+              {paused ? 'Resume' : 'Battle!'}
+            </Button>
+          )}
+        </div>
+        <div className="bit-button-slot shrink-0">
+          <Button onClick={reset} variant="secondary" className="px-4">
+            Reset
+          </Button>
+        </div>
+      </div>
 
-      <div className="flex w-full shrink-0 gap-4">
-        <Card className={cn(fixedCard(MAIN_CARD_H), 'min-w-0 flex-1 !py-0')}>
-          <CardContent className="flex min-h-0 flex-1 flex-col justify-center gap-5 overflow-y-auto px-6 py-2">
+      <div className="grid w-full shrink-0 grid-cols-1 items-start gap-6 lg:grid-cols-2">
+        <Card
+          className={cn(fixedCard(MAIN_CARD_H), 'relative min-w-0 !py-0')}
+        >
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+          >
+            <BattleCardShader />
+          </div>
+          <CardContent className="relative z-10 flex min-h-0 flex-1 flex-col justify-center gap-5 overflow-y-auto px-6 py-2">
             {snapshot ? (
               <>
                 <div className="flex shrink-0 justify-end">
@@ -181,7 +184,7 @@ export function PokemonBattler() {
           </CardContent>
         </Card>
 
-        <Card className={cn(fixedCard(MAIN_CARD_H), 'min-w-0 flex-1 !py-0')}>
+        <Card className={cn(fixedCard(MAIN_CARD_H), 'min-w-0 !py-0')}>
           <CardHeader className="shrink-0 py-3">
             <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">
               Activity
@@ -193,7 +196,7 @@ export function PokemonBattler() {
         </Card>
       </div>
 
-      <div className="flex w-full shrink-0 gap-4">
+      <div className="grid w-full shrink-0 grid-cols-1 items-start gap-6 lg:grid-cols-2">
         <DraftColumn
           side={0}
           className={fixedCard(TEAM_CARD_H)}

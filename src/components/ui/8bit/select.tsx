@@ -77,6 +77,22 @@ function frameBorderClass(frameColor?: "player-a" | "player-b"): string {
   return "border-foreground dark:border-ring";
 }
 
+function frameTextClass(frameColor?: "player-a" | "player-b"): string {
+  if (frameColor === "player-a") {
+    return "text-player-a [&_[data-slot=select-value]]:text-player-a";
+  }
+  if (frameColor === "player-b") {
+    return "text-player-b [&_[data-slot=select-value]]:text-player-b";
+  }
+  return "";
+}
+
+function itemTextClass(textColor?: "player-a" | "player-b"): string {
+  if (textColor === "player-a") return "text-player-a focus:text-player-a";
+  if (textColor === "player-b") return "text-player-b focus:text-player-b";
+  return "";
+}
+
 function SelectTrigger({ children, frameColor, ...props }: BitSelectTriggerProps) {
   const { className, font } = props;
   const border = frameBorderClass(frameColor);
@@ -92,7 +108,10 @@ function SelectTrigger({ children, frameColor, ...props }: BitSelectTriggerProps
     >
       <ShadcnSelectTrigger
         {...props}
-        className="rounded-none ring-0 w-full border-0"
+        className={cn(
+          "rounded-none ring-0 w-full border-0",
+          frameTextClass(frameColor),
+        )}
       >
         {children}
       </ShadcnSelectTrigger>
@@ -145,11 +164,15 @@ function SelectLabel({
 function SelectItem({
   className,
   children,
+  textColor,
   ...props
-}: React.ComponentProps<typeof SelectPrimitive.Item>) {
+}: React.ComponentProps<typeof SelectPrimitive.Item> & {
+  textColor?: "player-a" | "player-b";
+}) {
   return (
     <ShadcnSelectItem
       className={cn(
+        itemTextClass(textColor),
         className,
         "rounded-none border-y-3 border-dashed border-ring/0 hover:border-foreground dark:hover:border-ring"
       )}
