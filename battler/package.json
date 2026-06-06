@@ -1,0 +1,18 @@
+{
+  "name": "pokered-battler",
+  "version": "0.1.0",
+  "description": "A Gen 1 turn-based battle engine + Battle Factory mode, built on data extracted from the pokered disassembly",
+  "type": "module",
+  "scripts": {
+    "demo": "tsx demo.ts",
+    "factory": "tsx factory-demo.ts",
+    "arena": "tsx arena.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

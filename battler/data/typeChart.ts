@@ -1,0 +1,103 @@
+import type { TypeMatchup } from './types';
+
+// All non-neutral type matchups from TypeEffects table (main.asm:68009)
+// Matchups not listed here are ×1 (neutral)
+export const TYPE_CHART: TypeMatchup[] = [
+  { attackingType: 'WATER',    defendingType: 'FIRE',     multiplier: 2   },
+  { attackingType: 'FIRE',     defendingType: 'GRASS',    multiplier: 2   },
+  { attackingType: 'FIRE',     defendingType: 'ICE',      multiplier: 2   },
+  { attackingType: 'GRASS',    defendingType: 'WATER',    multiplier: 2   },
+  { attackingType: 'ELECTRIC', defendingType: 'WATER',    multiplier: 2   },
+  { attackingType: 'WATER',    defendingType: 'ROCK',     multiplier: 2   },
+  { attackingType: 'GROUND',   defendingType: 'FLYING',   multiplier: 0   },
+  { attackingType: 'WATER',    defendingType: 'WATER',    multiplier: 0.5 },
+  { attackingType: 'FIRE',     defendingType: 'FIRE',     multiplier: 0.5 },
+  { attackingType: 'ELECTRIC', defendingType: 'ELECTRIC', multiplier: 0.5 },
+  { attackingType: 'ICE',      defendingType: 'ICE',      multiplier: 0.5 },
+  { attackingType: 'GRASS',    defendingType: 'GRASS',    multiplier: 0.5 },
+  { attackingType: 'PSYCHIC',  defendingType: 'PSYCHIC',  multiplier: 0.5 },
+  { attackingType: 'FIRE',     defendingType: 'WATER',    multiplier: 0.5 },
+  { attackingType: 'GRASS',    defendingType: 'FIRE',     multiplier: 0.5 },
+  { attackingType: 'WATER',    defendingType: 'GRASS',    multiplier: 0.5 },
+  { attackingType: 'ELECTRIC', defendingType: 'GRASS',    multiplier: 0.5 },
+  { attackingType: 'NORMAL',   defendingType: 'ROCK',     multiplier: 0.5 },
+  { attackingType: 'NORMAL',   defendingType: 'GHOST',    multiplier: 0   },
+  { attackingType: 'GHOST',    defendingType: 'GHOST',    multiplier: 2   },
+  { attackingType: 'FIRE',     defendingType: 'BUG',      multiplier: 2   },
+  { attackingType: 'FIRE',     defendingType: 'ROCK',     multiplier: 0.5 },
+  { attackingType: 'WATER',    defendingType: 'GROUND',   multiplier: 2   },
+  { attackingType: 'ELECTRIC', defendingType: 'GROUND',   multiplier: 0   },
+  { attackingType: 'ELECTRIC', defendingType: 'FLYING',   multiplier: 2   },
+  { attackingType: 'GRASS',    defendingType: 'GROUND',   multiplier: 2   },
+  { attackingType: 'GRASS',    defendingType: 'BUG',      multiplier: 0.5 },
+  { attackingType: 'GRASS',    defendingType: 'POISON',   multiplier: 0.5 },
+  { attackingType: 'GRASS',    defendingType: 'ROCK',     multiplier: 2   },
+  { attackingType: 'GRASS',    defendingType: 'FLYING',   multiplier: 0.5 },
+  { attackingType: 'ICE',      defendingType: 'WATER',    multiplier: 0.5 },
+  { attackingType: 'ICE',      defendingType: 'GRASS',    multiplier: 2   },
+  { attackingType: 'ICE',      defendingType: 'GROUND',   multiplier: 2   },
+  { attackingType: 'ICE',      defendingType: 'FLYING',   multiplier: 2   },
+  { attackingType: 'FIGHTING', defendingType: 'NORMAL',   multiplier: 2   },
+  { attackingType: 'FIGHTING', defendingType: 'POISON',   multiplier: 0.5 },
+  { attackingType: 'FIGHTING', defendingType: 'FLYING',   multiplier: 0.5 },
+  { attackingType: 'FIGHTING', defendingType: 'PSYCHIC',  multiplier: 0.5 },
+  { attackingType: 'FIGHTING', defendingType: 'BUG',      multiplier: 0.5 },
+  { attackingType: 'FIGHTING', defendingType: 'ROCK',     multiplier: 2   },
+  { attackingType: 'FIGHTING', defendingType: 'ICE',      multiplier: 2   },
+  { attackingType: 'FIGHTING', defendingType: 'GHOST',    multiplier: 0   },
+  { attackingType: 'POISON',   defendingType: 'GRASS',    multiplier: 2   },
+  { attackingType: 'POISON',   defendingType: 'POISON',   multiplier: 0.5 },
+  { attackingType: 'POISON',   defendingType: 'GROUND',   multiplier: 0.5 },
+  { attackingType: 'POISON',   defendingType: 'BUG',      multiplier: 2   },
+  { attackingType: 'POISON',   defendingType: 'ROCK',     multiplier: 0.5 },
+  { attackingType: 'POISON',   defendingType: 'GHOST',    multiplier: 0.5 },
+  { attackingType: 'GROUND',   defendingType: 'FIRE',     multiplier: 2   },
+  { attackingType: 'GROUND',   defendingType: 'ELECTRIC', multiplier: 2   },
+  { attackingType: 'GROUND',   defendingType: 'GRASS',    multiplier: 0.5 },
+  { attackingType: 'GROUND',   defendingType: 'BUG',      multiplier: 0.5 },
+  { attackingType: 'GROUND',   defendingType: 'ROCK',     multiplier: 2   },
+  { attackingType: 'GROUND',   defendingType: 'POISON',   multiplier: 2   },
+  { attackingType: 'FLYING',   defendingType: 'ELECTRIC', multiplier: 0.5 },
+  { attackingType: 'FLYING',   defendingType: 'FIGHTING', multiplier: 2   },
+  { attackingType: 'FLYING',   defendingType: 'BUG',      multiplier: 2   },
+  { attackingType: 'FLYING',   defendingType: 'GRASS',    multiplier: 2   },
+  { attackingType: 'FLYING',   defendingType: 'ROCK',     multiplier: 0.5 },
+  { attackingType: 'PSYCHIC',  defendingType: 'FIGHTING', multiplier: 2   },
+  { attackingType: 'PSYCHIC',  defendingType: 'POISON',   multiplier: 2   },
+  { attackingType: 'BUG',      defendingType: 'FIRE',     multiplier: 0.5 },
+  { attackingType: 'BUG',      defendingType: 'GRASS',    multiplier: 2   },
+  { attackingType: 'BUG',      defendingType: 'FIGHTING', multiplier: 0.5 },
+  { attackingType: 'BUG',      defendingType: 'FLYING',   multiplier: 0.5 },
+  { attackingType: 'BUG',      defendingType: 'PSYCHIC',  multiplier: 2   },
+  { attackingType: 'BUG',      defendingType: 'GHOST',    multiplier: 0.5 },
+  { attackingType: 'BUG',      defendingType: 'POISON',   multiplier: 2   },
+  { attackingType: 'ROCK',     defendingType: 'FIRE',     multiplier: 2   },
+  { attackingType: 'ROCK',     defendingType: 'FIGHTING', multiplier: 0.5 },
+  { attackingType: 'ROCK',     defendingType: 'GROUND',   multiplier: 0.5 },
+  { attackingType: 'ROCK',     defendingType: 'FLYING',   multiplier: 2   },
+  { attackingType: 'ROCK',     defendingType: 'BUG',      multiplier: 2   },
+  { attackingType: 'ROCK',     defendingType: 'ICE',      multiplier: 2   },
+  { attackingType: 'GHOST',    defendingType: 'NORMAL',   multiplier: 0   },
+  { attackingType: 'GHOST',    defendingType: 'PSYCHIC',  multiplier: 0   },
+  { attackingType: 'FIRE',     defendingType: 'DRAGON',   multiplier: 0.5 },
+  { attackingType: 'WATER',    defendingType: 'DRAGON',   multiplier: 0.5 },
+  { attackingType: 'ELECTRIC', defendingType: 'DRAGON',   multiplier: 0.5 },
+  { attackingType: 'GRASS',    defendingType: 'DRAGON',   multiplier: 0.5 },
+  { attackingType: 'ICE',      defendingType: 'DRAGON',   multiplier: 2   },
+  { attackingType: 'DRAGON',   defendingType: 'DRAGON',   multiplier: 2   },
+];
+
+// Fast lookup: TYPE_CHART_LOOKUP['WATER']['FIRE'] = 2
+export const TYPE_CHART_LOOKUP: Partial<Record<string, Partial<Record<string, 0 | 0.5 | 2>>>> =
+  TYPE_CHART.reduce((acc, m) => {
+    if (!acc[m.attackingType]) acc[m.attackingType] = {};
+    acc[m.attackingType]![m.defendingType] = m.multiplier;
+    return acc;
+  }, {} as Partial<Record<string, Partial<Record<string, 0 | 0.5 | 2>>>>);
+
+export function getTypeMultiplier(
+  attackingType: string,
+  defendingType: string,
+): 0 | 0.5 | 1 | 2 {
+  return (TYPE_CHART_LOOKUP[attackingType]?.[defendingType] ?? 1) as 0 | 0.5 | 1 | 2;
+}
