@@ -3,6 +3,10 @@
 // injects the OPENROUTER_API_KEY server-side so it is never shipped to the client.
 // Reads the key from the Vercel project env var (Production).
 
+// Edge runtime: uses the web-standard Request -> Response signature this handler
+// is written for (the Node runtime would invoke it as (req, res) and hang).
+export const config = { runtime: 'edge' }
+
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
 export default async function handler(req: Request): Promise<Response> {
