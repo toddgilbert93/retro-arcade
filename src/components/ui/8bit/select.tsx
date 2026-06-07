@@ -68,28 +68,44 @@ interface BitSelectTriggerProps
     VariantProps<typeof inputVariants> {
   asChild?: boolean;
   /** Theme player accent for the 8-bit frame borders. */
-  frameColor?: "player-a" | "player-b";
+  frameColor?: "player-a" | "player-b" | "player-c" | "player-d";
 }
 
-function frameBorderClass(frameColor?: "player-a" | "player-b"): string {
+function frameBorderClass(
+  frameColor?: "player-a" | "player-b" | "player-c" | "player-d",
+): string {
   if (frameColor === "player-a") return "border-player-a";
   if (frameColor === "player-b") return "border-player-b";
+  if (frameColor === "player-c") return "border-player-c";
+  if (frameColor === "player-d") return "border-player-d";
   return "border-foreground dark:border-ring";
 }
 
-function frameTextClass(frameColor?: "player-a" | "player-b"): string {
+function frameTextClass(
+  frameColor?: "player-a" | "player-b" | "player-c" | "player-d",
+): string {
   if (frameColor === "player-a") {
     return "text-player-a [&_[data-slot=select-value]]:text-player-a";
   }
   if (frameColor === "player-b") {
     return "text-player-b [&_[data-slot=select-value]]:text-player-b";
   }
+  if (frameColor === "player-c") {
+    return "text-player-c [&_[data-slot=select-value]]:text-player-c";
+  }
+  if (frameColor === "player-d") {
+    return "text-player-d [&_[data-slot=select-value]]:text-player-d";
+  }
   return "";
 }
 
-function itemTextClass(textColor?: "player-a" | "player-b"): string {
+function itemTextClass(
+  textColor?: "player-a" | "player-b" | "player-c" | "player-d",
+): string {
   if (textColor === "player-a") return "text-player-a focus:text-player-a";
   if (textColor === "player-b") return "text-player-b focus:text-player-b";
+  if (textColor === "player-c") return "text-player-c focus:text-player-c";
+  if (textColor === "player-d") return "text-player-d focus:text-player-d";
   return "";
 }
 
@@ -167,7 +183,7 @@ function SelectItem({
   textColor,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Item> & {
-  textColor?: "player-a" | "player-b";
+  textColor?: "player-a" | "player-b" | "player-c" | "player-d";
 }) {
   return (
     <ShadcnSelectItem

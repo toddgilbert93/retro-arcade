@@ -5,11 +5,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/8bit/card'
-import type { GameRecord } from '../engine/recordingTypes'
 
-// ── Types parsed from tournament.ndjson ───────────────────────────────────
-
-interface ModelStat {
+export interface ModelStat {
   id: string
   label: string
   games: number
@@ -21,22 +18,21 @@ interface ModelStat {
   avgMoveDurationMs: number
 }
 
-interface TournamentMeta {
+export interface TournamentMeta {
   runAt: string
   elapsedS: number
   totalGames: number
   models: ModelStat[]
 }
 
-interface TournamentData {
-  meta: TournamentMeta
-  records: GameRecord[]
+export interface LeaderboardProps {
+  title: string
+  dataUrl: string
+  runCommand?: string
 }
 
-// ── Data loading ───────────────────────────────────────────────────────────
-
-async function loadTournamentData(): Promise<TournamentData> {
-  const res = await fetch('/tournament.ndjson')
+export async function loadTournamentMeta(dataUrl: string): Promise<TournamentMeta> {
+  const res = await fetch(dataUrl)
   if (!res.ok) throw new Error('not_found')
   const ct = res.headers.get('content-type') ?? ''
   // Vite's SPA fallback serves index.html (text/html) for unknown paths with 200
@@ -45,17 +41,15 @@ async function loadTournamentData(): Promise<TournamentData> {
   if (text.trimStart().startsWith('<')) throw new Error('not_found')
   const lines = text.trim().split('\n').filter(Boolean)
   let meta: TournamentMeta | null = null
-  const records: GameRecord[] = []
   for (const line of lines) {
-    const obj = JSON.parse(line) as { type: string; record?: GameRecord } & Partial<TournamentMeta>
+    const obj = JSON.parse(line) as { type: string } & Partial<TournamentMeta>
     if (obj.type === 'meta') {
       meta = obj as unknown as TournamentMeta
-    } else if (obj.type === 'gameRecord' && obj.record) {
-      records.push(obj.record)
+      break
     }
   }
-  if (!meta) throw new Error('No meta line found in tournament.ndjson')
-  return { meta, records }
+  if (!meta) throw new Error('No meta line found in tournament data')
+  return meta
 }
 
 function msLabel(ms: number): string {
@@ -63,15 +57,17 @@ function msLabel(ms: number): string {
   return `${ms}ms`
 }
 
-// ── Main leaderboard component ─────────────────────────────────────────────
-
-export function Leaderboard() {
-  const [data, setData] = useState<TournamentData | null>(null)
+export function Leaderboard({ title, dataUrl, runCommand }: LeaderboardProps) {
+  const [meta, setMeta] = useState<TournamentMeta | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    loadTournamentData().then(setData).catch((e: Error) => setError(e.message))
-  }, [])
+    setMeta(null)
+    setError(null)
+    loadTournamentMeta(dataUrl)
+      .then(setMeta)
+      .catch((e: Error) => setError(e.message))
+  }, [dataUrl])
 
   if (error) {
     const notFound = error === 'not_found'
@@ -79,12 +75,18 @@ export function Leaderboard() {
       <Card>
         <CardHeader>
           <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">
-            Leaderboard
+            {title}
           </CardTitle>
         </CardHeader>
         <CardContent className="py-8 text-center text-sm text-muted-foreground">
           <p>No tournament results found.</p>
-          <p className="mt-2 text-xs">Run <code className="font-mono bg-muted px-1 rounded">npm run tournament</code> to generate them.</p>
+          {runCommand && (
+            <p className="mt-2 text-xs">
+              Run{' '}
+              <code className="rounded bg-muted px-1 font-mono">{runCommand}</code>{' '}
+              to generate them.
+            </p>
+          )}
           {!notFound && (
             <p className="mt-1 text-xs text-destructive/70">{error}</p>
           )}
@@ -93,12 +95,12 @@ export function Leaderboard() {
     )
   }
 
-  if (!data) {
+  if (!meta) {
     return (
       <Card>
         <CardHeader>
           <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">
-            Leaderboard
+            {title}
           </CardTitle>
         </CardHeader>
         <CardContent className="py-8 text-center text-sm text-muted-foreground">
@@ -108,15 +110,13 @@ export function Leaderboard() {
     )
   }
 
-  const { meta } = data
-
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">
-          Leaderboard
+          {title}
         </CardTitle>
-        <p className="text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">
+        <p className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
           <span>Run: {new Date(meta.runAt).toLocaleString()}</span>
           <span>{meta.totalGames} games</span>
           <span>{Math.round(meta.elapsedS / 60)}m elapsed</span>
@@ -124,17 +124,17 @@ export function Leaderboard() {
       </CardHeader>
       <CardContent>
         <div className="overflow-x-auto">
-          <table className="w-full text-xs retro">
+          <table className="retro w-full text-xs">
             <thead>
               <tr className="border-b border-border text-left text-muted-foreground">
                 <th className="pb-2 pr-3 font-medium">Rank</th>
                 <th className="pb-2 pr-3 font-medium">Model</th>
-                <th className="pb-2 pr-3 font-medium text-right">W</th>
-                <th className="pb-2 pr-3 font-medium text-right">L</th>
-                <th className="pb-2 pr-3 font-medium text-right">D</th>
-                <th className="pb-2 pr-3 font-medium text-right">Forfeits</th>
-                <th className="pb-2 pr-3 font-medium text-right">Win%</th>
-                <th className="pb-2 font-medium text-right">Avg ms/move</th>
+                <th className="pb-2 pr-3 text-right font-medium">W</th>
+                <th className="pb-2 pr-3 text-right font-medium">L</th>
+                <th className="pb-2 pr-3 text-right font-medium">D</th>
+                <th className="pb-2 pr-3 text-right font-medium">Forfeits</th>
+                <th className="pb-2 pr-3 text-right font-medium">Win%</th>
+                <th className="pb-2 text-right font-medium">Avg ms/move</th>
               </tr>
             </thead>
             <tbody>
@@ -146,9 +146,11 @@ export function Leaderboard() {
                   <td className="py-2 pr-3 text-right">{m.losses}</td>
                   <td className="py-2 pr-3 text-right">{m.draws}</td>
                   <td className="py-2 pr-3 text-right">
-                    {m.forfeits > 0
-                      ? <span className="text-destructive">{m.forfeits}</span>
-                      : <span className="text-muted-foreground">0</span>}
+                    {m.forfeits > 0 ? (
+                      <span className="text-destructive">{m.forfeits}</span>
+                    ) : (
+                      <span className="text-muted-foreground">0</span>
+                    )}
                   </td>
                   <td className="py-2 pr-3 text-right font-semibold tabular-nums">
                     {m.winPct}%

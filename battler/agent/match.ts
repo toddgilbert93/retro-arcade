@@ -13,6 +13,7 @@ import {
   makeLLMDrafter,
   heuristicDrafter,
   type Logger,
+  type ModelCaller,
 } from './llmChooser.ts';
 
 export interface MatchOptions {
@@ -24,6 +25,10 @@ export interface MatchOptions {
   log?: Logger;
   /** Force LLM play on/off. Defaults to whether an API key is available. */
   useLLM?: boolean;
+  /** Override the OpenRouter caller for side A (defaults to {@link callModel}). */
+  callerA?: ModelCaller;
+  /** Override the OpenRouter caller for side B (defaults to {@link callModel}). */
+  callerB?: ModelCaller;
 }
 
 export interface MatchResult {
@@ -49,9 +54,11 @@ export async function runMatch(opts: MatchOptions): Promise<MatchResult> {
     opts.log?.(line);
   };
   const useLLM = opts.useLLM ?? hasApiKey();
+  const callerA = opts.callerA ?? callModel;
+  const callerB = opts.callerB ?? callModel;
 
-  const drafterA = useLLM ? makeLLMDrafter(modelA.model, callModel, log) : heuristicDrafter;
-  const drafterB = useLLM ? makeLLMDrafter(modelB.model, callModel, log) : heuristicDrafter;
+  const drafterA = useLLM ? makeLLMDrafter(modelA.model, callerA, log) : heuristicDrafter;
+  const drafterB = useLLM ? makeLLMDrafter(modelB.model, callerB, log) : heuristicDrafter;
 
   log(`=== DRAFT: ${modelA.label} (A) vs ${modelB.label} (B)${useLLM ? '' : ' [heuristic]'} ===`);
   const draftRng = new RNG(opts.seed);
@@ -65,10 +72,10 @@ export async function runMatch(opts: MatchOptions): Promise<MatchResult> {
   const result = await runBattle(sideA, sideB, {
     seed: opts.seed,
     onLog: log,
-    playerChooser: useLLM ? makeLLMChooser(modelA.model, callModel, log) : aiChooser,
-    enemyChooser: useLLM ? makeLLMChooser(modelB.model, callModel, log) : aiChooser,
-    playerReplacer: useLLM ? makeLLMReplacer(modelA.model, callModel, log) : aiReplacer,
-    enemyReplacer: useLLM ? makeLLMReplacer(modelB.model, callModel, log) : aiReplacer,
+    playerChooser: useLLM ? makeLLMChooser(modelA.model, callerA, log) : aiChooser,
+    enemyChooser: useLLM ? makeLLMChooser(modelB.model, callerB, log) : aiChooser,
+    playerReplacer: useLLM ? makeLLMReplacer(modelA.model, callerA, log) : aiReplacer,
+    enemyReplacer: useLLM ? makeLLMReplacer(modelB.model, callerB, log) : aiReplacer,
   });
 
   const winnerModel = result.winner === 0 ? modelA : modelB;

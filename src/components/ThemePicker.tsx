@@ -14,7 +14,7 @@ function ThemeSwatch({ colors }: { colors: [string, string, string] }) {
       {colors.map((color) => (
         <span
           key={color}
-          className="h-2.5 w-2.5 first:rounded-l-sm last:rounded-r-sm"
+          className="h-2.5 w-2.5"
           style={{ backgroundColor: color }}
         />
       ))}

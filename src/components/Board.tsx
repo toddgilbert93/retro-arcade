@@ -71,8 +71,8 @@ export function Board({ fen, lastMove, orientation }: BoardProps) {
   )
 
   return (
-    <Card>
-      <CardContent className="p-2">
+    <Card className="!h-auto !gap-0 !py-0">
+      <CardContent className="flex-none p-2">
         <div className="chess-sim-board">
           <Chessboard options={boardOptions} />
         </div>

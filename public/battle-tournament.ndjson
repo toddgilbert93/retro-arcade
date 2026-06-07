@@ -1,0 +1,13 @@
+{"type":"meta","runAt":"2026-06-07T17:16:32.610Z","elapsedS":708,"totalGames":12,"models":[{"id":"m:x-ai/grok-4.3","label":"Grok 4.3","games":6,"wins":5,"losses":1,"draws":0,"forfeits":0,"winPct":83,"avgMoveDurationMs":3584},{"id":"m:anthropic/claude-sonnet-4.6","label":"Claude Sonnet 4.6","games":6,"wins":5,"losses":1,"draws":0,"forfeits":0,"winPct":83,"avgMoveDurationMs":4188},{"id":"m:openai/gpt-5.4-mini","label":"GPT-5.4 Mini","games":6,"wins":1,"losses":5,"draws":0,"forfeits":0,"winPct":17,"avgMoveDurationMs":796},{"id":"m:google/gemini-3.1-flash-lite","label":"Gemini 3.1 Flash Lite","games":6,"wins":1,"losses":5,"draws":0,"forfeits":0,"winPct":17,"avgMoveDurationMs":761}]}
+{"type":"battleRecord","record":{"modelAId":"m:openai/gpt-5.4-mini","modelBId":"m:google/gemini-3.1-flash-lite","winnerId":"m:openai/gpt-5.4-mini","turns":15}}
+{"type":"battleRecord","record":{"modelAId":"m:openai/gpt-5.4-mini","modelBId":"m:x-ai/grok-4.3","winnerId":"m:x-ai/grok-4.3","turns":15}}
+{"type":"battleRecord","record":{"modelAId":"m:openai/gpt-5.4-mini","modelBId":"m:anthropic/claude-sonnet-4.6","winnerId":"m:anthropic/claude-sonnet-4.6","turns":11}}
+{"type":"battleRecord","record":{"modelAId":"m:google/gemini-3.1-flash-lite","modelBId":"m:openai/gpt-5.4-mini","winnerId":"m:google/gemini-3.1-flash-lite","turns":17}}
+{"type":"battleRecord","record":{"modelAId":"m:google/gemini-3.1-flash-lite","modelBId":"m:anthropic/claude-sonnet-4.6","winnerId":"m:anthropic/claude-sonnet-4.6","turns":7}}
+{"type":"battleRecord","record":{"modelAId":"m:google/gemini-3.1-flash-lite","modelBId":"m:x-ai/grok-4.3","winnerId":"m:x-ai/grok-4.3","turns":23}}
+{"type":"battleRecord","record":{"modelAId":"m:x-ai/grok-4.3","modelBId":"m:openai/gpt-5.4-mini","winnerId":"m:x-ai/grok-4.3","turns":13}}
+{"type":"battleRecord","record":{"modelAId":"m:x-ai/grok-4.3","modelBId":"m:google/gemini-3.1-flash-lite","winnerId":"m:x-ai/grok-4.3","turns":27}}
+{"type":"battleRecord","record":{"modelAId":"m:anthropic/claude-sonnet-4.6","modelBId":"m:openai/gpt-5.4-mini","winnerId":"m:anthropic/claude-sonnet-4.6","turns":10}}
+{"type":"battleRecord","record":{"modelAId":"m:x-ai/grok-4.3","modelBId":"m:anthropic/claude-sonnet-4.6","winnerId":"m:x-ai/grok-4.3","turns":14}}
+{"type":"battleRecord","record":{"modelAId":"m:anthropic/claude-sonnet-4.6","modelBId":"m:google/gemini-3.1-flash-lite","winnerId":"m:anthropic/claude-sonnet-4.6","turns":14}}
+{"type":"battleRecord","record":{"modelAId":"m:anthropic/claude-sonnet-4.6","modelBId":"m:x-ai/grok-4.3","winnerId":"m:anthropic/claude-sonnet-4.6","turns":25}}

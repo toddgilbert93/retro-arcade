@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Board } from './components/Board'
 import { GameControls } from './components/GameControls'
-import { Leaderboard } from './components/Leaderboard'
 import { PokemonBattler } from './components/PokemonBattler'
+import { PokerGame } from './components/PokerGame'
+import { Tournament } from './components/Tournament'
 import { MoveList } from './components/MoveList'
 import { StatusPanel } from './components/StatusPanel'
 import {
@@ -12,18 +13,21 @@ import {
   TabsTrigger,
 } from '@/components/ui/8bit/tabs'
 import { ThemePicker } from './components/ThemePicker'
+import { AALogo } from './components/AALogo'
 import { useChessGame } from './hooks/useChessGame'
 import { usePokemonBattle } from './hooks/usePokemonBattle'
+import { usePokerGame } from './hooks/usePokerGame'
 import {
   gameLayoutGrid,
   gameLayoutPrimary,
   gameLayoutSidebar,
 } from '@/layout/gameLayout'
-type Page = 'game' | 'battler'
+type Page = 'game' | 'battler' | 'poker' | 'tournament'
 
 export default function App() {
   const game = useChessGame()
   const battle = usePokemonBattle()
+  const poker = usePokerGame()
   const { snapshot } = game
   const [page, setPage] = useState<Page>('battler')
 
@@ -31,6 +35,7 @@ export default function App() {
     const next = value as Page
     if (page === 'game' && next !== 'game') game.pause()
     if (page === 'battler' && next !== 'battler') battle.pause()
+    if (page === 'poker' && next !== 'poker') poker.pause()
     setPage(next)
   }
 
@@ -43,13 +48,21 @@ export default function App() {
       <header className="mb-4 shrink-0">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="retro text-xl md:text-2xl">Retro Arcade</h1>
-            <TabsList className="mt-6 h-auto p-1">
+            <h1>
+              <AALogo />
+            </h1>
+            <TabsList className="mt-8 h-auto p-1">
               <TabsTrigger value="battler" className="px-4 py-2">
                 Pokemon Battler
               </TabsTrigger>
               <TabsTrigger value="game" className="px-4 py-2">
                 Chess
+              </TabsTrigger>
+              <TabsTrigger value="poker" className="px-4 py-2">
+                Poker
+              </TabsTrigger>
+              <TabsTrigger value="tournament" className="px-4 py-2">
+                Tournament
               </TabsTrigger>
             </TabsList>
           </div>
@@ -80,7 +93,6 @@ export default function App() {
                 onSetPlayerType={game.setPlayerType}
               />
               <StatusPanel snapshot={snapshot} />
-              <Leaderboard />
             </aside>
           </main>
         )}
@@ -88,6 +100,14 @@ export default function App() {
 
       <TabsContent value="battler" className="mt-0">
         <PokemonBattler battle={battle} />
+      </TabsContent>
+
+      <TabsContent value="poker" className="mt-0">
+        <PokerGame game={poker} />
+      </TabsContent>
+
+      <TabsContent value="tournament" className="mt-0">
+        <Tournament />
       </TabsContent>
     </Tabs>
   )

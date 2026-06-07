@@ -17,6 +17,9 @@ import { PokemonPanel } from '@/components/pokemon/battleParts'
 import { BattleControls } from '@/components/BattleControls'
 import {
   gameLayoutGrid,
+  gameLayoutPanelCard,
+  gameLayoutPanelContent,
+  gameLayoutPanelStretch,
   gameLayoutPrimary,
   gameLayoutSidebar,
   pokemonBattleCardH,
@@ -108,7 +111,7 @@ export function PokemonBattler({ battle }: PokemonBattlerProps) {
                       </span>
                     </>
                   ) : (
-                    'Battle not started.'
+                    'Press Battle to start.'
                   )}
                 </p>
               </div>
@@ -117,13 +120,13 @@ export function PokemonBattler({ battle }: PokemonBattlerProps) {
         </Card>
         </div>
 
-        <Card className="flex min-h-0 min-w-0 flex-1 flex-col !gap-0 !py-0">
+        <Card className={cn(gameLayoutPanelStretch, gameLayoutPanelCard)}>
           <CardHeader className="shrink-0 pt-5 pb-2">
             <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">
               Activity
             </CardTitle>
           </CardHeader>
-          <CardContent className="retro flex min-h-0 flex-1 flex-col overflow-hidden pt-3 pb-4">
+          <CardContent className={cn(gameLayoutPanelContent, 'retro overflow-hidden pt-3 pb-2')}>
             <ActivityFeed log={log} />
           </CardContent>
         </Card>
