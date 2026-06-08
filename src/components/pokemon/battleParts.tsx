@@ -150,7 +150,12 @@ export function PokemonPanel({
   const showBall = ballPhase !== 'idle'
 
   const nameplate = (
-    <div className={cn(compact ? 'w-32' : 'w-52', 'max-w-full', align === 'right' ? 'text-right' : 'text-left')}>
+    <div
+      className={cn(
+        compact ? 'w-32' : 'w-36 sm:w-52',
+        align === 'right' ? 'text-right' : 'text-left',
+      )}
+    >
       <div className="flex items-center gap-2" style={{ justifyContent: align === 'right' ? 'flex-end' : 'flex-start' }}>
         <span className={cn('retro text-[10px]', nameClassName)}>{mon.species}</span>
         {mon.status !== 'NONE' && (
@@ -178,7 +183,7 @@ export function PokemonPanel({
     </div>
   )
 
-  const spriteSize = compact ? 'h-20 w-20' : 'h-32 w-32'
+  const spriteSize = compact ? 'h-20 w-20' : 'h-20 w-20 sm:h-32 sm:w-32'
   const sprite = (
     <div className={cn('poke-sprite-slot relative', spriteSize)}>
       <img
@@ -208,7 +213,7 @@ export function PokemonPanel({
 
   return (
     <div className={cn('retro', align === 'right' ? 'text-right' : 'text-left')}>
-      <div className="flex items-center gap-2">
+      <div className="flex min-w-0 items-center gap-1 sm:gap-2">
         {facing === 'back' ? (
           <>
             {sprite}

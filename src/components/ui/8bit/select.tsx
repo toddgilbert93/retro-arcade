@@ -116,7 +116,7 @@ function SelectTrigger({ children, frameColor, ...props }: BitSelectTriggerProps
   return (
     <div
       className={cn(
-        "relative border-y-6",
+        "bit-frame-control relative min-w-0 border-y-6",
         border,
         className,
         font !== "normal" && "retro"
@@ -125,7 +125,7 @@ function SelectTrigger({ children, frameColor, ...props }: BitSelectTriggerProps
       <ShadcnSelectTrigger
         {...props}
         className={cn(
-          "rounded-none ring-0 w-full border-0",
+          "min-w-0 rounded-none ring-0 w-full border-0",
           frameTextClass(frameColor),
         )}
       >

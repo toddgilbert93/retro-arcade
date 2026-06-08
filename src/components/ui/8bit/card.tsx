@@ -36,7 +36,7 @@ function Card({ className, font, ...props }: BitCardProps) {
   return (
     <div
       className={cn(
-        "relative bg-card text-card-foreground border-y-6 border-foreground dark:border-ring p-0!",
+        "relative min-w-0 bg-card text-card-foreground border-y-6 border-foreground dark:border-ring p-0!",
         className
       )}
     >

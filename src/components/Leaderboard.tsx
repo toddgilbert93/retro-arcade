@@ -31,7 +31,21 @@ export interface LeaderboardProps {
   runCommand?: string
 }
 
+const metaCache = new Map<string, Promise<TournamentMeta>>()
+
 export async function loadTournamentMeta(dataUrl: string): Promise<TournamentMeta> {
+  const cached = metaCache.get(dataUrl)
+  if (cached) return cached
+
+  const promise = fetchTournamentMeta(dataUrl).catch((e) => {
+    metaCache.delete(dataUrl)
+    throw e
+  })
+  metaCache.set(dataUrl, promise)
+  return promise
+}
+
+async function fetchTournamentMeta(dataUrl: string): Promise<TournamentMeta> {
   const res = await fetch(dataUrl)
   if (!res.ok) throw new Error('not_found')
   const ct = res.headers.get('content-type') ?? ''

@@ -59,7 +59,7 @@ export function BattleControls({
           <div className="bit-button-slot space-y-2">
             <Label htmlFor="player-a">Player A</Label>
             <Select value={aId} onValueChange={onAIdChange} disabled={selectorsLocked}>
-              <SelectTrigger id="player-a" frameColor={playerFrameColor(0)} className="w-full">
+              <SelectTrigger id="player-a" frameColor={playerFrameColor(0)}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -74,7 +74,7 @@ export function BattleControls({
           <div className="bit-button-slot space-y-2">
             <Label htmlFor="player-b">Player B</Label>
             <Select value={bId} onValueChange={onBIdChange} disabled={selectorsLocked}>
-              <SelectTrigger id="player-b" frameColor={playerFrameColor(1)} className="w-full">
+              <SelectTrigger id="player-b" frameColor={playerFrameColor(1)}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

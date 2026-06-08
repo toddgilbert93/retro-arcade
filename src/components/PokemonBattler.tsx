@@ -17,11 +17,12 @@ import { PokemonPanel } from '@/components/pokemon/battleParts'
 import { BattleControls } from '@/components/BattleControls'
 import {
   gameLayoutGrid,
+  gameLayoutLgOrder,
   gameLayoutPanelCard,
   gameLayoutPanelContent,
   gameLayoutPanelStretch,
-  gameLayoutPrimary,
-  gameLayoutSidebar,
+  gameLayoutPrimaryCol,
+  gameLayoutSidebarCol,
   pokemonBattleCardH,
 } from '@/layout/gameLayout'
 import { cn } from '@/lib/utils'
@@ -67,16 +68,16 @@ export function PokemonBattler({ battle }: PokemonBattlerProps) {
 
   return (
     <main className={cn(gameLayoutGrid, 'lg:items-stretch')}>
-      <div className={cn(gameLayoutPrimary, 'lg:h-full')}>
-        <div className={cn('shrink-0', pokemonBattleCardH)}>
-        <Card className="relative h-full min-w-0 !py-0">
+      <div className={cn(gameLayoutPrimaryCol, 'lg:h-full')}>
+        <div className={cn('order-2 shrink-0', gameLayoutLgOrder, pokemonBattleCardH)}>
+        <Card className="relative min-w-0 !py-0 sm:h-full">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
           >
             <BattleCardShader />
           </div>
-          <CardContent className="relative z-10 flex min-h-0 flex-1 flex-col justify-center gap-5 overflow-y-auto px-6 py-2">
+          <CardContent className="relative z-10 flex min-h-28 flex-1 flex-col justify-between gap-1 overflow-hidden px-3 py-1 sm:min-h-0 sm:gap-2 sm:px-6 sm:py-2">
             {snapshot ? (
               <>
                 <div className="flex shrink-0 justify-end">
@@ -120,7 +121,7 @@ export function PokemonBattler({ battle }: PokemonBattlerProps) {
         </Card>
         </div>
 
-        <Card className={cn(gameLayoutPanelStretch, gameLayoutPanelCard)}>
+        <Card className={cn('order-3', gameLayoutLgOrder, gameLayoutPanelStretch, gameLayoutPanelCard)}>
           <CardHeader className="shrink-0 pt-5 pb-2">
             <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">
               Activity
@@ -132,23 +133,26 @@ export function PokemonBattler({ battle }: PokemonBattlerProps) {
         </Card>
       </div>
 
-      <aside className={gameLayoutSidebar}>
-        <BattleControls
-          aId={aId}
-          bId={bId}
-          selectorsLocked={selectorsLocked}
-          showPause={showPause}
-          pausePending={pausePending}
-          terminal={terminal}
-          thinking={thinking !== null}
-          paused={paused}
-          onAIdChange={setAId}
-          onBIdChange={setBId}
-          onPlay={onPlay}
-          onPause={pause}
-          onReset={reset}
-        />
+      <aside className={gameLayoutSidebarCol}>
+        <div className={cn('order-1', gameLayoutLgOrder)}>
+          <BattleControls
+            aId={aId}
+            bId={bId}
+            selectorsLocked={selectorsLocked}
+            showPause={showPause}
+            pausePending={pausePending}
+            terminal={terminal}
+            thinking={thinking !== null}
+            paused={paused}
+            onAIdChange={setAId}
+            onBIdChange={setBId}
+            onPlay={onPlay}
+            onPause={pause}
+            onReset={reset}
+          />
+        </div>
         <DraftColumn
+          className={cn('order-4', gameLayoutLgOrder)}
           side={0}
           title={modelA.label}
           picks={picksA}
@@ -158,6 +162,7 @@ export function PokemonBattler({ battle }: PokemonBattlerProps) {
           pausePending={pausePending}
         />
         <DraftColumn
+          className={cn('order-5', gameLayoutLgOrder)}
           side={1}
           title={modelB.label}
           picks={picksB}
@@ -179,6 +184,7 @@ function DraftColumn({
   side,
   thinking,
   pausePending,
+  className,
 }: {
   title: string
   picks: { species: string; dexNumber: number }[]
@@ -187,16 +193,17 @@ function DraftColumn({
   side: PlayerSide
   thinking: string | null
   pausePending: boolean
+  className?: string
 }) {
   const isThinking = thinking === title && !pausePending
 
   return (
-    <Card>
-      <CardHeader className="shrink-0 py-3">
-        <div className="flex items-center justify-between gap-2">
+    <Card className={className}>
+      <CardHeader className="shrink-0 overflow-hidden py-3">
+        <div className="flex min-w-0 items-center justify-between gap-2">
           <CardTitle
             className={cn(
-              'min-w-0 truncate text-xs uppercase tracking-wider',
+              'min-w-0 flex-1 truncate text-xs uppercase tracking-wider',
               playerTextClass(side),
             )}
           >

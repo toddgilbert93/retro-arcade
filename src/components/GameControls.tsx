@@ -61,7 +61,7 @@ export function GameControls({
                 onValueChange={(value) => onSetPlayerType(side, value)}
                 disabled={controlsLocked}
               >
-                <SelectTrigger id={`player-${side}`} className="w-full">
+                <SelectTrigger id={`player-${side}`}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

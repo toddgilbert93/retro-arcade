@@ -80,7 +80,7 @@ function SeatBox({
     : undefined
 
   return (
-    <div className={cn('w-[188px] transition-opacity', dimmed && 'opacity-45')}>
+    <div className={cn('w-full max-w-[188px] transition-opacity', dimmed && 'opacity-45')}>
       <div className="mb-2 flex items-center justify-between gap-1">
         <div className="flex min-w-0 items-center gap-1">
           <span className={cn('retro min-w-0 truncate text-[11px]', seatTextClass(seat.seat))}>
@@ -140,6 +140,39 @@ function handWinnerText(seats: SeatView[]): string | null {
   return `${names} split ${total}`
 }
 
+function BoardArea({
+  snapshot,
+  board,
+  idle,
+  potLine,
+}: {
+  snapshot: PokerSnapshot
+  board: PokerSnapshot['board']
+  idle: boolean
+  potLine: string
+}) {
+  return (
+    <div className="flex w-full max-w-full flex-col items-center justify-center gap-2 px-2 py-2 sm:min-h-[152px] sm:gap-3 sm:py-3">
+      <span className="retro text-[10px] uppercase tracking-wider text-muted-foreground">
+        {idle ? 'waiting' : `${snapshot.street} · hand ${snapshot.handNumber}`}
+      </span>
+      <div className="flex gap-1.5">
+        {Array.from({ length: 5 }, (_, i) => (
+          <PlayingCard key={i} card={board[i] ?? null} size="lg" />
+        ))}
+      </div>
+      <span
+        className={cn(
+          'retro max-w-full text-center text-xs sm:text-sm',
+          idle ? 'text-muted-foreground' : 'text-primary',
+        )}
+      >
+        {potLine}
+      </span>
+    </div>
+  )
+}
+
 export function PokerTable({ snapshot, thinking, pausePending, idle = false }: PokerTableProps) {
   const seats = snapshot.seats
   const board = snapshot.board
@@ -148,40 +181,33 @@ export function PokerTable({ snapshot, thinking, pausePending, idle = false }: P
     ? 'Press Deal to start the table.'
     : (winnerText ?? `Pot ${snapshot.pot}`)
 
+  const seatProps = { thinking, pausePending }
+
   return (
-    <div className="grid grid-cols-[auto_1fr_auto] grid-rows-[auto_auto_auto] items-center justify-items-center gap-x-4 gap-y-4 overflow-visible lg:grid-rows-[auto_1fr_auto]">
-      {/* top-left */}
-      <SeatBox seat={seats[2]!} thinking={thinking} pausePending={pausePending} />
-
-      {/* top-center spacer */}
-      <div />
-
-      {/* top-right */}
-      <SeatBox seat={seats[3]!} thinking={thinking} pausePending={pausePending} />
-
-      {/* board — spans full middle row */}
-      <div className="col-span-3 flex flex-col items-center justify-center gap-2 py-2 lg:min-h-[152px] lg:gap-3 lg:py-3">
-        <span className="retro text-[10px] uppercase tracking-wider text-muted-foreground">
-          {idle ? 'waiting' : `${snapshot.street} · hand ${snapshot.handNumber}`}
-        </span>
-        <div className="flex gap-1.5">
-          {Array.from({ length: 5 }, (_, i) => (
-            <PlayingCard key={i} card={board[i] ?? null} size="lg" />
-          ))}
-        </div>
-        <span className={cn('retro text-sm', idle ? 'text-muted-foreground' : 'text-primary')}>
-          {potLine}
-        </span>
+    <>
+      {/* Narrow: stack seats vertically around the board */}
+      <div className="flex w-full min-w-0 flex-col items-center gap-4 sm:hidden">
+        <SeatBox seat={seats[2]!} {...seatProps} />
+        <SeatBox seat={seats[3]!} {...seatProps} />
+        <BoardArea snapshot={snapshot} board={board} idle={idle} potLine={potLine} />
+        <SeatBox seat={seats[1]!} {...seatProps} />
+        <SeatBox seat={seats[0]!} {...seatProps} />
       </div>
 
-      {/* bottom-left */}
-      <SeatBox seat={seats[1]!} thinking={thinking} pausePending={pausePending} />
+      {/* Desktop: four corners around the board */}
+      <div className="hidden w-full grid-cols-[auto_1fr_auto] grid-rows-[auto_1fr_auto] items-center justify-items-center gap-x-4 gap-y-4 overflow-visible sm:grid">
+        <SeatBox seat={seats[2]!} {...seatProps} />
+        <div />
+        <SeatBox seat={seats[3]!} {...seatProps} />
 
-      {/* bottom-center spacer */}
-      <div />
+        <div className="col-span-3">
+          <BoardArea snapshot={snapshot} board={board} idle={idle} potLine={potLine} />
+        </div>
 
-      {/* bottom-right */}
-      <SeatBox seat={seats[0]!} thinking={thinking} pausePending={pausePending} />
-    </div>
+        <SeatBox seat={seats[1]!} {...seatProps} />
+        <div />
+        <SeatBox seat={seats[0]!} {...seatProps} />
+      </div>
+    </>
   )
 }

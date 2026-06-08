@@ -21,7 +21,17 @@
 }
 
 .bit-button-slot {
+  min-width: 0;
   padding-inline: 0.375rem;
+}
+
+/*
+ * Side borders use border-x-6 -mx-1.5 (6px extension each side), same as cards.
+ * Full width; bit-button-slot padding absorbs the bleed inside control cards.
+ */
+.bit-frame-control {
+  margin-inline: 0;
+  width: 100%;
 }
 
 .thinking-dots span {

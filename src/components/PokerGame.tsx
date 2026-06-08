@@ -11,10 +11,11 @@ import { PokerCommentaryFeed } from '@/components/poker/PokerCommentaryFeed'
 import { BattleCardShader } from '@/components/pokemon/BattleCardShader'
 import {
   gameLayoutGrid,
+  gameLayoutLgOrder,
   gameLayoutPanelCard,
   gameLayoutPanelContent,
-  gameLayoutPrimary,
-  gameLayoutSidebar,
+  gameLayoutPrimaryCol,
+  gameLayoutSidebarCol,
 } from '@/layout/gameLayout'
 import { cn } from '@/lib/utils'
 
@@ -49,8 +50,8 @@ export function PokerGame({ game }: PokerGameProps) {
 
   return (
     <main className={cn(gameLayoutGrid, 'lg:items-stretch')}>
-      <div className={cn(gameLayoutPrimary, 'lg:h-full')}>
-        <Card className={cn('relative min-w-0', gameLayoutPanelCard)}>
+      <div className={cn(gameLayoutPrimaryCol, 'lg:h-full')}>
+        <Card className={cn('order-2 relative min-w-0', gameLayoutLgOrder, gameLayoutPanelCard)}>
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
@@ -68,19 +69,21 @@ export function PokerGame({ game }: PokerGameProps) {
         </Card>
       </div>
 
-      <aside className={gameLayoutSidebar}>
-        <PokerControls
-          showPause={showPause}
-          pausePending={pausePending}
-          terminal={terminal}
-          thinking={thinking !== null}
-          paused={paused}
-          started={started}
-          onPlay={onPlay}
-          onPause={pause}
-          onReset={reset}
-        />
-        <Card className="min-w-0">
+      <aside className={gameLayoutSidebarCol}>
+        <div className={cn('order-1', gameLayoutLgOrder)}>
+          <PokerControls
+            showPause={showPause}
+            pausePending={pausePending}
+            terminal={terminal}
+            thinking={thinking !== null}
+            paused={paused}
+            started={started}
+            onPlay={onPlay}
+            onPause={pause}
+            onReset={reset}
+          />
+        </div>
+        <Card className={cn('order-3 min-w-0', gameLayoutLgOrder)}>
           <CardHeader>
             <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground">
               Commentary
