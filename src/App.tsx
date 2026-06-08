@@ -24,6 +24,9 @@ import {
 } from '@/layout/gameLayout'
 type Page = 'game' | 'battler' | 'poker' | 'tournament'
 
+/** Set false to pause games when leaving their tab (default behavior). */
+const PAUSE_ON_TAB_SWITCH = false
+
 export default function App() {
   const game = useChessGame()
   const battle = usePokemonBattle()
@@ -33,9 +36,11 @@ export default function App() {
 
   const handlePageChange = (value: string) => {
     const next = value as Page
-    if (page === 'game' && next !== 'game') game.pause()
-    if (page === 'battler' && next !== 'battler') battle.pause()
-    if (page === 'poker' && next !== 'poker') poker.pause()
+    if (PAUSE_ON_TAB_SWITCH) {
+      if (page === 'game' && next !== 'game') game.pause()
+      if (page === 'battler' && next !== 'battler') battle.pause()
+      if (page === 'poker' && next !== 'poker') poker.pause()
+    }
     setPage(next)
   }
 

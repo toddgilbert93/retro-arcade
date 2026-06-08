@@ -110,16 +110,18 @@ export function VictoryScreen({
                   <Item variant="outline" className="rounded-none p-1">
                     <ItemContent className="flex flex-col items-center justify-between gap-2 truncate md:flex-row">
                       <div className="flex w-full flex-row items-center justify-center gap-2 truncate md:max-w-[65%] md:justify-start">
-                        {showItemIcon && item.icon && (
+                        {showItemIcon && (
                           <span className="flex size-8 shrink-0 items-center justify-center">
-                            <img
-                              src={item.icon}
-                              alt=""
-                              className={cn(
-                                'pixelated size-full object-contain',
-                                item.iconClassName,
-                              )}
-                            />
+                            {item.icon ? (
+                              <img
+                                src={item.icon}
+                                alt=""
+                                className={cn(
+                                  'pixelated size-full object-contain',
+                                  item.iconClassName,
+                                )}
+                              />
+                            ) : null}
                           </span>
                         )}
                         <ItemTitle className="retro leading-normal">

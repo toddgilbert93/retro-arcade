@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { VictoryScreen } from '@/components/ui/8bit/blocks/victory-screen'
 import type { VictoryScreenItems } from '@/components/ui/8bit/blocks/victory-screen'
-import { Card, CardContent } from '@/components/ui/8bit/card'
 import { modelLogoForId, modelLogoIconClass } from '@/poker/modelLogos'
 import { computeOverallRankings } from '@/tournament/overallRankings'
 import { loadTournamentMeta, type TournamentMeta } from './Leaderboard'
@@ -19,6 +18,18 @@ const RANK_RARITIES: VictoryScreenItems['rarity'][] = [
   'rare',
   'common',
 ]
+
+const LEADERBOARD_ROW_COUNT = 4
+
+const PLACEHOLDER_ITEMS: VictoryScreenItems[] = Array.from(
+  { length: LEADERBOARD_ROW_COUNT },
+  (_, i) => ({
+    id: i + 1,
+    name: 'Model name',
+    rarity: 'common',
+    rankLabel: '—',
+  }),
+)
 
 interface DisciplineState {
   key: (typeof DISCIPLINES)[number]['key']
@@ -77,24 +88,27 @@ export function OverallLeaderboard() {
 
   if (loading) {
     return (
-      <Card>
-        <CardContent className="retro py-12 text-center text-sm text-muted-foreground">
-          Loading results…
-        </CardContent>
-      </Card>
+      <VictoryScreen
+        title="Loading results…"
+        itemsSectionTitle="Leaderboard"
+        itemsObtained={PLACEHOLDER_ITEMS}
+        footerText="Final rankings calculated by average place in all games."
+        className="pointer-events-none animate-pulse opacity-60"
+        aria-busy
+        aria-live="polite"
+      />
     )
   }
 
   if (availableCount === 0 || !winner) {
     return (
-      <Card>
-        <CardContent className="retro py-12 text-center text-sm text-muted-foreground">
-          <p>No tournament results found.</p>
-          <p className="mt-2 text-[9px]">
-            Run the per-game tournaments to populate the overall standings.
-          </p>
-        </CardContent>
-      </Card>
+      <VictoryScreen
+        title="No tournament results"
+        itemsSectionTitle="Leaderboard"
+        itemsObtained={PLACEHOLDER_ITEMS}
+        footerText="Run the per-game tournaments to populate the overall standings."
+        className="[&_[data-slot=item-group]]:invisible"
+      />
     )
   }
 

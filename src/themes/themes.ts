@@ -1,8 +1,8 @@
 export type ThemeId =
+  | 'ocean-depth'
   | 'sunset-circuit'
   | 'neon-arcade'
   | 'forest-night'
-  | 'ocean-depth'
   | 'cherry-terminal'
 
 export interface Theme {
@@ -17,6 +17,16 @@ export interface Theme {
 }
 
 export const THEMES: Theme[] = [
+  {
+    id: 'ocean-depth',
+    label: 'Ocean Depth',
+    swatch: ['#0a1628', '#22d3ee', '#38bdf8'],
+    board: {
+      light: '#7dd3fc',
+      dark: '#0c4a6e',
+      highlight: 'rgba(34, 211, 238, 0.45)',
+    },
+  },
   {
     id: 'sunset-circuit',
     label: 'Sunset Circuit',
@@ -48,16 +58,6 @@ export const THEMES: Theme[] = [
     },
   },
   {
-    id: 'ocean-depth',
-    label: 'Ocean Depth',
-    swatch: ['#0a1628', '#22d3ee', '#38bdf8'],
-    board: {
-      light: '#7dd3fc',
-      dark: '#0c4a6e',
-      highlight: 'rgba(34, 211, 238, 0.45)',
-    },
-  },
-  {
     id: 'cherry-terminal',
     label: 'Cherry Terminal',
     swatch: ['#1a0a10', '#f43f5e', '#e879f9'],
@@ -69,7 +69,7 @@ export const THEMES: Theme[] = [
   },
 ]
 
-export const DEFAULT_THEME_ID: ThemeId = 'sunset-circuit'
+export const DEFAULT_THEME_ID: ThemeId = 'ocean-depth'
 
 export function getTheme(id: ThemeId): Theme {
   return (
@@ -81,7 +81,7 @@ export function getTheme(id: ThemeId): Theme {
 
 export function normalizeThemeId(stored: string | null): ThemeId | null {
   if (!stored) return null
-  if (stored === 'greyscale' || stored === 'greenscale') return 'sunset-circuit'
+  if (stored === 'greyscale' || stored === 'greenscale') return 'ocean-depth'
   if (THEMES.some((t) => t.id === stored)) return stored as ThemeId
   return null
 }
